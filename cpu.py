@@ -23,16 +23,31 @@ SOFTWARE
 """
 
 import func
+import sys
+import getopt
 import time
 import math
 import multiprocessing
 from multiprocessing import Value
 
-NUMBER = 10000000
+DEFAULT_NUMBER = 10000000
 
-if __name__ == "__main__":
+def main(argv):
+    number = DEFAULT_NUMBER
+    opts, args = getopt.getopt(argv, "n:")
+
+    try:
+        for opt, arg in opts:
+            if opt in ("-n"):
+                number = int(arg)
+    except:
+        pass
+
+    if number < 1000:
+        number = DEFAULT_NUMBER
+
     cpu_count = func.get_cpu_count()
-    ranges = func.get_ranges(NUMBER, cpu_count)
+    ranges = func.get_ranges(number, cpu_count)
     
     total_prime_count = 0
     procs = []
@@ -49,7 +64,7 @@ if __name__ == "__main__":
 
         proc.start()
 
-    print("crunching primes from number " + str(NUMBER) + " using " + str(cpu_count) + " cores")
+    print("crunching primes from number " + str(number) + " using " + str(cpu_count) + " cores")
 
     for x in procs:
         x.join()
@@ -61,3 +76,6 @@ if __name__ == "__main__":
     seconds = math.floor(stop_time - start_time)
 
     print("Found " + str(total_prime_count) + " primes in " + str(seconds) + " seconds")
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
