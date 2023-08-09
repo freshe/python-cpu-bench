@@ -44,23 +44,18 @@ def crunch_range(value, f: int, t: int):
     value.value = prime_count
 
 def get_ranges(number: int, count: int) -> [] :
+    range_size = number // count
     ranges = []
-    size = math.floor(number / count)
-    remainder = number % count
+    start = 1
+    end = start + range_size - 1
 
-    f = 1
-    t = size + remainder
+    for _ in range(count - 1):
+        ranges.append(Range(start, end))
+        start = end + 1
+        end = start + range_size - 1
 
-    for i in range(count):
-        r = Range(f, t)
-        ranges.append(r)
+    ranges.append(Range(start, number))
 
-        f = t + 1
-        t = f + size
-
-        if t > number:
-            t = number
-        
     return ranges
 
 def is_prime(number: int) -> bool:

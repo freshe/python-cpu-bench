@@ -33,6 +33,7 @@ DEFAULT_NUMBER = 10000000
 def main(argv):
     number = DEFAULT_NUMBER
     opts, args = getopt.getopt(argv, "n:")
+    cpu_count = func.get_cpu_count()
 
     try:
         for opt, arg in opts:
@@ -41,12 +42,13 @@ def main(argv):
     except:
         pass
 
-    if number < 1000:
+    if number < 0:
         number = DEFAULT_NUMBER
 
-    cpu_count = func.get_cpu_count()
+    if number < 10000:
+        cpu_count = 1
+
     ranges = func.get_ranges(number, cpu_count)
-    
     total_prime_count = 0
     procs = []
     values = []
