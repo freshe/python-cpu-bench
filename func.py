@@ -34,7 +34,7 @@ class Range:
         self.f = f
         self.t = t
 
-def print_header():
+def write_header():
     print("cpu bench")
     print("https://www.fredrikblank.com", end = "\n\n")
 

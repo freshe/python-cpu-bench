@@ -32,7 +32,7 @@ from multiprocessing import Value
 DEFAULT_NUMBER = 10000000
 
 def main(argv):
-    func.print_header()
+    func.write_header()
     
     number = DEFAULT_NUMBER
     opts, args = getopt.getopt(argv, "n:")
