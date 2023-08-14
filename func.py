@@ -21,7 +21,10 @@
 # SOFTWARE
 
 import math
+import time
 import multiprocessing
+
+g_running = False
 
 class Range:
     f: int = 0
@@ -30,6 +33,30 @@ class Range:
     def __init__(self, f: int, t: int) -> None:
         self.f = f
         self.t = t
+
+def print_header():
+    print("cpu bench")
+    print("https://www.fredrikblank.com", end = "\n\n")
+
+def write_spinner():
+    global g_running
+    while g_running:
+        print("|", end = "\r")
+        time.sleep(0.5)
+        print("/", end = "\r")
+        time.sleep(0.5)
+        print("—", end = "\r")
+        time.sleep(0.5)
+        print("\\", end = "\r")
+        time.sleep(0.5)
+        print("|", end = "\r")
+        time.sleep(0.5)
+        print("/", end = "\r")
+        time.sleep(0.5)
+        print("—", end = "\r")
+        time.sleep(0.5)
+        print("\\", end = "\r")
+        time.sleep(0.5)
 
 def get_cpu_count() -> int:
     return multiprocessing.cpu_count()

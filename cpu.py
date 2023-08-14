@@ -26,11 +26,14 @@ import getopt
 import time
 import math
 import multiprocessing
+import threading
 from multiprocessing import Value
 
 DEFAULT_NUMBER = 10000000
 
 def main(argv):
+    func.print_header()
+    
     number = DEFAULT_NUMBER
     opts, args = getopt.getopt(argv, "n:")
     cpu_count = func.get_cpu_count()
@@ -53,18 +56,19 @@ def main(argv):
     procs = []
     values = []
 
+    func.g_running = True
+    spinner_thread = threading.Thread(target = func.write_spinner)
     start_time = time.time()
 
     for x in ranges:
         value = Value('i', 0)
-        proc = multiprocessing.Process(target=func.crunch_range, args=(value, x.f, x.t), daemon=False)
-
+        proc = multiprocessing.Process(target = func.crunch_range, args = (value, x.f, x.t), daemon = False)
         procs.append(proc)
         values.append(value)
-
         proc.start()
 
     print("crunching primes from number " + str(number) + " using " + str(cpu_count) + " cores")
+    spinner_thread.start()
 
     for x in procs:
         x.join()
@@ -72,10 +76,14 @@ def main(argv):
     for x in values:
         total_prime_count += x.value
 
+    func.g_running = False
+
     stop_time = time.time()
     seconds = math.floor(stop_time - start_time)
+    spinner_thread.join()
 
-    print("Found " + str(total_prime_count) + " primes in " + str(seconds) + " seconds")
+    print("\r", end = "")
+    print("found " + str(total_prime_count) + " primes in " + str(seconds) + " seconds")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
